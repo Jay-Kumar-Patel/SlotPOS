@@ -628,7 +628,7 @@ namespace SlotPOS
             var messagePayload = JsonConvert.SerializeObject(messageData);
 
             var options = new MqttClientOptionsBuilder()
-                .WithTcpServer("localhost", 1883)
+                .WithTcpServer("192.168.1.254", 1883)
                 .WithCredentials("pos", "@lphaBeta01")
                 .Build();
 
@@ -657,7 +657,7 @@ namespace SlotPOS
             var messagePayload = JsonConvert.SerializeObject(messageData);
 
             var options = new MqttClientOptionsBuilder()
-                .WithTcpServer("localhost", 1883)
+                .WithTcpServer("192.168.1.254", 1883)
                 .WithCredentials("pos", "@lphaBeta01")
                 .Build();
 
@@ -712,7 +712,7 @@ namespace SlotPOS
             var messagePayload = JsonConvert.SerializeObject(messageData);
 
             var options = new MqttClientOptionsBuilder()
-                .WithTcpServer("localhost", 1883)
+                .WithTcpServer("192.168.1.254", 1883)
                 .WithCredentials("pos", "@lphaBeta01")
                 .Build();
 
@@ -743,7 +743,7 @@ namespace SlotPOS
             var messagePayload = JsonConvert.SerializeObject(messageData);
 
             var options = new MqttClientOptionsBuilder()
-                .WithTcpServer("localhost", 1883)
+                .WithTcpServer("192.168.1.254", 1883)
                 .WithCredentials("pos", "@lphaBeta01")
                 .Build();
 
@@ -775,7 +775,7 @@ namespace SlotPOS
             var messagePayload = JsonConvert.SerializeObject(messageData);
 
             var options = new MqttClientOptionsBuilder()
-                .WithTcpServer("localhost", 1883)
+                .WithTcpServer("192.168.1.254", 1883)
                 .WithCredentials("pos", "@lphaBeta01")
                 .Build();
 
@@ -806,7 +806,7 @@ namespace SlotPOS
             var messagePayload = JsonConvert.SerializeObject(messageData);
 
             var options = new MqttClientOptionsBuilder()
-                .WithTcpServer("localhost", 1883)
+                .WithTcpServer("192.168.1.254", 1883)
                 .WithCredentials("pos", "@lphaBeta01")
                 .Build();
 
