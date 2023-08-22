@@ -164,6 +164,7 @@ namespace SlotPOS
 
                             pop.Owner = popUp;
                             pop.FormBorderStyle = FormBorderStyle.Fixed3D;
+                            pop.FormClosed += NewGroup_FormClosed;
                             pop.ShowDialog();
 
                             popUp.Dispose();
@@ -194,6 +195,12 @@ namespace SlotPOS
                 SendMqttMessageStoreDetails();
                 SendMqttMessageDateTime();
             }
+        }
+
+        private void NewGroup_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            LoadGroupData();
+            LoadMachines();
         }
 
         private void InsertMachineDetail(string machineNo)
@@ -428,10 +435,10 @@ namespace SlotPOS
 
                 if (result == DialogResult.Yes)
                 {
+                    SendMqttMessageClear(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString());
+
                     ClearMachine(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString());
                 }
-
-                SendMqttMessageClear(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString());
             }
             else if (DataGridViewMachines.Columns[e.ColumnIndex].HeaderText == "Delete" && e.RowIndex >= 0)
             {
@@ -441,11 +448,11 @@ namespace SlotPOS
 
                 if (result == DialogResult.Yes)
                 {
+                    SendMqttMessageDeleteFirstMessage(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString());
+                    SendMqttMessageDeleteSecondMessage(DataGridViewMachines.Rows[e.RowIndex].Cells["Static_IP"].Value.ToString());
+
                     DeleteMachine(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString());
                 }
-
-                SendMqttMessageDeleteFirstMessage(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString());
-                SendMqttMessageDeleteSecondMessage(DataGridViewMachines.Rows[e.RowIndex].Cells["Static_IP"].Value.ToString());
             }
         }
 

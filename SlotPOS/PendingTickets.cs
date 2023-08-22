@@ -86,28 +86,39 @@ namespace SlotPOS
 
             foreach (DataRow row in data.Tables[0].Rows)
             {
-                TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
-                tableLayoutPanel.Dock = DockStyle.Top;
-                tableLayoutPanel.Height = 60;
-                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
-                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
-                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
-                Button Redeem = addButton(row[0].ToString());
-                Label TicketNo = addLabel(row[0].ToString());
-                decimal Ticketmount = (decimal)ulong.Parse(Convert.ToString(row[1])) / 100;
-                Label TicketAmount = addLabel(Ticketmount.ToString());
-                tableLayoutPanel.Controls.Add(TicketNo, 0, 0);
-                tableLayoutPanel.Controls.Add(TicketAmount, 1, 0);
-                tableLayoutPanel.Controls.Add(Redeem, 2, 0);
-                PanelTable.Controls.Add(tableLayoutPanel);
-                Redeem.Click += new System.EventHandler(this.ButtonClicked);
+                if (!row[5].ToString().Equals("1"))
+                {
+                    TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
+                    tableLayoutPanel.Dock = DockStyle.Top;
+                    tableLayoutPanel.Height = 60;
+                    tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
+                    tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
+                    tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
+                    Button Redeem = addButton(row[0].ToString());
+                    Label TicketNo = addLabel(row[0].ToString());
+                    decimal Ticketmount = (decimal)ulong.Parse(Convert.ToString(row[1])) / 100;
+                    Label TicketAmount = addLabel(Ticketmount.ToString());
+                    tableLayoutPanel.Controls.Add(TicketNo, 0, 0);
+                    tableLayoutPanel.Controls.Add(TicketAmount, 1, 0);
+                    tableLayoutPanel.Controls.Add(Redeem, 2, 0);
+                    PanelTable.Controls.Add(tableLayoutPanel);
+                    Redeem.Click += new System.EventHandler(this.ButtonClicked);
 
-                ticketPending = true;
+                    ticketPending = true;
+                }
             }
 
             if (!ticketPending)
             {
                 this.Close();
+            }
+        }
+
+        private void ButtonClicked_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.IsInputKey = true; 
             }
         }
 
@@ -192,6 +203,7 @@ namespace SlotPOS
             currButton.ForeColor = Color.White;
             currButton.TextAlign = ContentAlignment.MiddleCenter;
             currButton.UseVisualStyleBackColor = false;
+            currButton.PreviewKeyDown += ButtonClicked_PreviewKeyDown;
             return currButton;
         }
 

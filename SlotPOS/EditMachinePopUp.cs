@@ -1,4 +1,8 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MQTTnet.Client;
+using MQTTnet.Protocol;
+using MQTTnet;
+using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using SlotPOS.Utils;
 using System;
 using System.Collections.Generic;
@@ -106,6 +110,11 @@ namespace SlotPOS
                             pop.ipAddress = TextBoxStaticIP.Text.ToString();
                             pop.from = "Edit";
 
+                            if (TextBoxStaticIP.Text.ToString() != ipAddress)
+                            {
+                                pop.isIpAddressChange = true;
+                            }
+
                             popUp.StartPosition = FormStartPosition.Manual;
                             popUp.FormBorderStyle = FormBorderStyle.None;
                             popUp.Opacity = .70d;
@@ -137,7 +146,15 @@ namespace SlotPOS
                 }
                 else
                 {
-                    EditMachine();
+                    if (TextBoxStaticIP.Text.ToString() == ipAddress)
+                    {
+                        EditMachine(false);
+                    }
+                    else
+                    {
+                        EditMachine(true);
+                    }
+
                     this.Close();
                 }
             }
@@ -171,7 +188,7 @@ namespace SlotPOS
             return true;
         }
 
-        private void EditMachine()
+        private void EditMachine(bool isIpAddressChange)
         {
             Database dataBase = new Database();
             try
@@ -192,6 +209,17 @@ namespace SlotPOS
                     command.ExecuteNonQuery();
                     conn.Close();
 
+                    if (isIpAddressChange)
+                    {
+                        SendMqttMessageDeleteFirstMessage("machine_" + LabelMachineNumber.Text.ToString());
+                        SendMqttMessageDeleteSecondMessage(TextBoxStaticIP.Text.ToString());
+
+                        SendMqttMessageAdd(TextBoxStaticIP.Text.ToString());
+                        SendMqttMessageStoreDetails();
+                        SendMqttMessageDateTime();
+                    }
+
+
                     MessageBox.Show("Machine edited successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -200,6 +228,183 @@ namespace SlotPOS
                 MessageBox.Show("Connection Failed!!! " + ex, "Alert", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private async Task SendMqttMessageAdd(String ipAddress)
+        {
+            var factory = new MqttFactory();
+            var mqttClient = factory.CreateMqttClient();
+
+            var messageData = new
+            {
+                operation = "add",
+                macAddress = ipAddress
+            };
+
+            var messagePayload = JsonConvert.SerializeObject(messageData);
+
+            var options = new MqttClientOptionsBuilder()
+                .WithTcpServer("192.168.1.254", 1883)
+                .WithCredentials("pos", "@lphaBeta01")
+                .Build();
+
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic("deviceOperation")
+                .WithPayload(messagePayload)
+                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                .WithRetainFlag(false)
+                .Build();
+
+            await mqttClient.ConnectAsync(options);
+            await mqttClient.PublishAsync(message);
+            await mqttClient.DisconnectAsync();
+        }
+
+
+        private async Task SendMqttMessageStoreDetails()
+        {
+
+            String name = "", address = "", city = "", state = "", zipCode = "";
+
+            Database database = new Database();
+            MySqlConnection connection = new MySqlConnection(database.connString);
+
+            connection.Open();
+
+            String query = "select * from store_details";
+            MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+            DataSet data = new DataSet();
+            adapter.Fill(data);
+
+            foreach (DataRow row in data.Tables[0].Rows)
+            {
+                name = row[0].ToString();
+                address = row[1].ToString();
+                city = row[2].ToString();
+                state = row[3].ToString();
+                zipCode = row[4].ToString();
+            }
+            connection.Close();
+
+            var factory = new MqttFactory();
+            var mqttClient = factory.CreateMqttClient();
+
+            var messageData = new
+            {
+                location = name,
+                address1 = address,
+                address2 = city + ", " + state + ", " + zipCode
+            };
+
+            var messagePayload = JsonConvert.SerializeObject(messageData);
+
+            var options = new MqttClientOptionsBuilder()
+                .WithTcpServer("192.168.1.254", 1883)
+                .WithCredentials("pos", "@lphaBeta01")
+                .Build();
+
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic("locationInfo")
+                .WithPayload(messagePayload)
+                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                .WithRetainFlag(false)
+                .Build();
+
+            await mqttClient.ConnectAsync(options);
+            await mqttClient.PublishAsync(message);
+            await mqttClient.DisconnectAsync();
+        }
+
+        private async Task SendMqttMessageDateTime()
+        {
+            var factory = new MqttFactory();
+            var mqttClient = factory.CreateMqttClient();
+
+            var messageData = new
+            {
+                dateTime = DateTime.Now.ToString()
+            };
+
+            var messagePayload = JsonConvert.SerializeObject(messageData);
+
+            var options = new MqttClientOptionsBuilder()
+                .WithTcpServer("192.168.1.254", 1883)
+                .WithCredentials("pos", "@lphaBeta01")
+                .Build();
+
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic("setDateTime")
+                .WithPayload(messagePayload)
+                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                .WithRetainFlag(false)
+                .Build();
+
+            await mqttClient.ConnectAsync(options);
+            await mqttClient.PublishAsync(message);
+            await mqttClient.DisconnectAsync();
+        }
+
+        private async Task SendMqttMessageDeleteFirstMessage(String machineName)
+        {
+            var factory = new MqttFactory();
+            var mqttClient = factory.CreateMqttClient();
+
+            var messageData = new
+            {
+                Machine_Number = machineName,
+                Time = DateTime.Now.ToString()
+            };
+
+            var messagePayload = JsonConvert.SerializeObject(messageData);
+
+            var options = new MqttClientOptionsBuilder()
+                .WithTcpServer("192.168.1.254", 1883)
+                .WithCredentials("pos", "@lphaBeta01")
+                .Build();
+
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic("machine_delete")
+                .WithPayload(messagePayload)
+                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                .WithRetainFlag(false)
+                .Build();
+
+            await mqttClient.ConnectAsync(options);
+            await mqttClient.PublishAsync(message);
+            await mqttClient.DisconnectAsync();
+        }
+
+
+        private async Task SendMqttMessageDeleteSecondMessage(String ipAddress)
+        {
+            var factory = new MqttFactory();
+            var mqttClient = factory.CreateMqttClient();
+
+            var messageData = new
+            {
+                operation = "delete",
+                macAddress = ipAddress
+            };
+
+            var messagePayload = JsonConvert.SerializeObject(messageData);
+
+            var options = new MqttClientOptionsBuilder()
+                .WithTcpServer("192.168.1.254", 1883)
+                .WithCredentials("pos", "@lphaBeta01")
+                .Build();
+
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic("deviceOperation")
+                .WithPayload(messagePayload)
+                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                .WithRetainFlag(false)
+                .Build();
+
+            await mqttClient.ConnectAsync(options);
+            await mqttClient.PublishAsync(message);
+            await mqttClient.DisconnectAsync();
+        }
+
+
 
         private void TextBoxGameName_KeyPress(object sender, KeyPressEventArgs e)
         {

@@ -249,7 +249,7 @@ namespace SlotPOS
             Database database = new Database();
             using (MySqlConnection connection = new MySqlConnection(database.connString))
             {
-                string query = $"SELECT COUNT(*), Ticket_Amount, Machine_No FROM ticket_details WHERE Ticket_No = @TicketNo";
+                string query = $"SELECT COUNT(*), Ticket_Amount, Machine_No, Ticket_Status, isPromoTicket FROM ticket_details WHERE Ticket_No = @TicketNo";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@TicketNo", ticketNumber);
@@ -261,51 +261,68 @@ namespace SlotPOS
                         if (reader.Read())
                         {
                             int rowCount = reader.GetInt32(0);
-                            long ticket_amount = reader.GetInt64(1);
-                            string machine_number = reader.GetString(2);
 
                             ticketExists = rowCount > 0;
 
-                            connection.Close();
+
                             if (ticketExists)
                             {
-                                DialogResult result = MessageBox.Show($"Ticket No.: {ticketNumber} \nTicket Amount: ${decimal.Parse(ticket_amount.ToString()) / 100} \nMachine Number: {machine_number} \nDo you want to redeem it?", "Redeem Ticket",
+                                long ticket_amount = reader.GetInt64(1);
+                                string machine_number = reader.GetString(2);
+                                string ticket_status = reader.GetString(3);
+                                int is_promo_ticket = reader.GetInt16(4);
+
+                                connection.Close();
+
+                                if (is_promo_ticket == 1)
+                                {
+                                    MessageBox.Show($"Ticket {ticketNumber} is Promo Ticket, you can't redeem it. Please contact Admin.");
+                                }
+                                else if (ticket_status.Equals("1"))
+                                {
+                                    MessageBox.Show($"Ticket {ticketNumber} was already redeemed!");
+                                }
+                                else
+                                {
+                                    DialogResult result = MessageBox.Show($"Ticket No.: {ticketNumber} \nTicket Amount: ${decimal.Parse(ticket_amount.ToString()) / 100} \nMachine Number: {machine_number} \nDo you want to redeem it?", "Redeem Ticket",
                                                           MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                                if (result == DialogResult.Yes)
-                                {
-                                    DateTime now = DateTime.Now;
-                                    String queryInsert = "INSERT INTO transactions (User_ID, Transaction_Type, Ticket_No, Machine_No, Amount, DateAndTime)" +
-                                        " VALUES (@UserId, @Transaction_Type, @Ticket_No, @Machine_No, @Amount, @DateAndTime)";
-                                    MySqlCommand command2 = new MySqlCommand(queryInsert, connection);
+                                    if (result == DialogResult.Yes)
+                                    {
+                                        DateTime now = DateTime.Now;
+                                        String queryInsert = "INSERT INTO transactions (User_ID, Transaction_Type, Ticket_No, Machine_No, Amount, DateAndTime)" +
+                                            " VALUES (@UserId, @Transaction_Type, @Ticket_No, @Machine_No, @Amount, @DateAndTime)";
+                                        MySqlCommand command2 = new MySqlCommand(queryInsert, connection);
 
-                                    command2.Parameters.AddWithValue("@UserId", Properties.Settings.Default.UserID);
-                                    command2.Parameters.AddWithValue("@Transaction_Type", "Cash_Out");
-                                    command2.Parameters.AddWithValue("@Ticket_No", ticketNumber);
+                                        command2.Parameters.AddWithValue("@UserId", Properties.Settings.Default.UserID);
+                                        command2.Parameters.AddWithValue("@Transaction_Type", "Cash_Out");
+                                        command2.Parameters.AddWithValue("@Ticket_No", ticketNumber);
 
-                                    command2.Parameters.AddWithValue("@Machine_No", machine_number);
-                                    command2.Parameters.AddWithValue("@Amount", ticket_amount);
-                                    command2.Parameters.AddWithValue("@DateAndTime", now);
+                                        command2.Parameters.AddWithValue("@Machine_No", machine_number);
+                                        command2.Parameters.AddWithValue("@Amount", ticket_amount);
+                                        command2.Parameters.AddWithValue("@DateAndTime", now);
 
-                                    connection.Open();
-                                    command2.ExecuteNonQuery();
-                                    connection.Close();
+                                        connection.Open();
+                                        command2.ExecuteNonQuery();
+                                        connection.Close();
 
-                                    String queryUpdate = "UPDATE ticket_details SET Ticket_Status = 1 Where Ticket_No = " + ticketNumber;
-                                    MySqlCommand commandUpdate = new MySqlCommand(queryUpdate, connection);
+                                        String queryUpdate = "UPDATE ticket_details SET Ticket_Status = 1 Where Ticket_No = " + ticketNumber;
+                                        MySqlCommand commandUpdate = new MySqlCommand(queryUpdate, connection);
 
-                                    connection.Open();
-                                    commandUpdate.ExecuteNonQuery();
-
-
-                                    Properties.Settings.Default.Balance = Properties.Settings.Default.Balance - decimal.Parse(ticket_amount.ToString()) / 100;
+                                        connection.Open();
+                                        commandUpdate.ExecuteNonQuery();
 
 
+                                        Properties.Settings.Default.Balance = Properties.Settings.Default.Balance - decimal.Parse(ticket_amount.ToString()) / 100;
+
+
+                                    }
                                 }
                             }
                             else
                             {
                                 MessageBox.Show($"Ticket {ticketNumber} does not exist in the database!");
+                                connection.Close();
                             }
                         }
                     }
@@ -659,6 +676,15 @@ namespace SlotPOS
             {
                 fetchMachineDetails();
                 MachineTimer.Start();
+            }
+        }
+
+        private void TextBoxSearch_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true;
+                Search.PerformClick();
             }
         }
     }

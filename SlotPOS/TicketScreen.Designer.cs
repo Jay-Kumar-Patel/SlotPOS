@@ -557,6 +557,7 @@
             TextBoxSearch.TabIndex = 1;
             TextBoxSearch.TextAlign = HorizontalAlignment.Center;
             TextBoxSearch.TextChanged += TextBoxSearch_TextChanged;
+            TextBoxSearch.KeyPress += TextBoxSearch_KeyPress;
             // 
             // Search
             // 
