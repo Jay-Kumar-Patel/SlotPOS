@@ -434,8 +434,6 @@ namespace SlotPOS
 
                 if (result == DialogResult.Yes)
                 {
-                    SendMqttMessageClear(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString());
-
                     ClearMachine(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString());
                 }
             }
@@ -447,9 +445,7 @@ namespace SlotPOS
 
                 if (result == DialogResult.Yes)
                 {
-                    SendMqttMessageDeleteFirstMessage(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString());
                     SendMqttMessageDeleteSecondMessage(DataGridViewMachines.Rows[e.RowIndex].Cells["Static_IP"].Value.ToString());
-
                     DeleteMachine(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString());
                 }
             }
@@ -495,6 +491,8 @@ namespace SlotPOS
 
                 string query = $"ALTER TABLE {"machine_" + machineNo} RENAME TO {"machine_" + machineNo + "_c" + counter}";
 
+                SendMqttMessageClear("machine_" + machineNo + "_c" + counter);
+
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.ExecuteNonQuery();
@@ -535,6 +533,7 @@ namespace SlotPOS
                         using (MySqlCommand selectCommand = new MySqlCommand(selectQuery, connection))
                         {
                             selectCommand.Parameters.AddWithValue("@machineNo", machineNo + "_" + currentTimestamp);
+                            SendMqttMessageDeleteFirstMessage(machineNo + "_" + currentTimestamp);
                             using (MySqlDataReader reader = selectCommand.ExecuteReader())
                             {
                                 if (reader.Read())

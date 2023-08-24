@@ -257,15 +257,15 @@ namespace SlotPOS
                 DateTime yesterdayTime = DateTime.Today.AddDays(-1);
                 String targetYesterdayTime = new DateTime(yesterdayTime.Year, yesterdayTime.Month, yesterdayTime.Day, tempTime.Hour, tempTime.Minute, tempTime.Second).ToString("dd-MM-yyyy h:mm:ss tt");
 
-                Paragraph paragraph7 = new Paragraph("To: " + DateTime.Today.DayOfWeek + " " + targetTime);
-                paragraph7.SetFontSize(14f);
-                paragraph7.SetTextAlignment(TextAlignment.RIGHT);
-                document.Add(paragraph7);
-
-                Paragraph paragraph6 = new Paragraph("From: " + DateTime.Today.DayOfWeek + " " + targetYesterdayTime);
+                Paragraph paragraph6 = new Paragraph("From: " + yesterdayTime.DayOfWeek + " " + targetYesterdayTime);
                 paragraph6.SetFontSize(14f);
                 paragraph6.SetTextAlignment(TextAlignment.RIGHT);
                 document.Add(paragraph6);
+
+                Paragraph paragraph7 = new Paragraph("To: " + currentTime.DayOfWeek + " " + targetTime);
+                paragraph7.SetFontSize(14f);
+                paragraph7.SetTextAlignment(TextAlignment.RIGHT);
+                document.Add(paragraph7);
 
                 Paragraph paragraph2 = new Paragraph("Created On: " + DateTime.Today.DayOfWeek + " " + DateTime.Now.ToString("dd-MM-yyyy h:mm:ss tt"));
                 paragraph2.SetFontSize(14f);
@@ -1103,15 +1103,15 @@ namespace SlotPOS
             DateTime yesterdayTime = DateTime.Today.AddDays(-1);
             String targetYesterdayTime = new DateTime(yesterdayTime.Year, yesterdayTime.Month, yesterdayTime.Day, tempTime.Hour, tempTime.Minute, tempTime.Second).ToString("dd-MM-yyyy h:mm:ss tt");
 
-            Paragraph paragraph7 = new Paragraph("To: " + DateTime.Today.DayOfWeek + " " + targetTime);
-            paragraph7.SetFontSize(14f);
-            paragraph7.SetTextAlignment(TextAlignment.RIGHT);
-            document.Add(paragraph7);
-
-            Paragraph paragraph6 = new Paragraph("From: " + DateTime.Today.DayOfWeek + " " + targetYesterdayTime);
+            Paragraph paragraph6 = new Paragraph("From: " + yesterdayTime.DayOfWeek + " " + targetYesterdayTime);
             paragraph6.SetFontSize(14f);
             paragraph6.SetTextAlignment(TextAlignment.RIGHT);
             document.Add(paragraph6);
+
+            Paragraph paragraph7 = new Paragraph("To: " + currentTime.DayOfWeek + " " + targetTime);
+            paragraph7.SetFontSize(14f);
+            paragraph7.SetTextAlignment(TextAlignment.RIGHT);
+            document.Add(paragraph7);
 
             Paragraph paragraph2 = new Paragraph("Created On: " + DateTime.Today.DayOfWeek + " " + DateTime.Now.ToString("dd-MM-yyyy h:mm:ss tt"));
             paragraph2.SetFontSize(14f);
