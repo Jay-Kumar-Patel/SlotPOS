@@ -175,25 +175,24 @@ namespace SlotPOS
                         MessageBox.Show(ex.Message);
                     }
                     finally { popUp.Dispose(); }
-                    TextBoxIPAddress.Clear();
-                    TextBoxGameName.Clear();
-                    TextBoxMachineNo.Clear();
-                    ComboBoxGroup.SelectedIndex = 0;
+                    
                 }
                 else
                 {
                     AddMachine();
                     CreateMachineTable(TextBoxMachineNo.Text.ToString());
                     InsertMachineDetail(TextBoxMachineNo.Text.ToString());
-                    TextBoxIPAddress.Clear();
-                    TextBoxGameName.Clear();
-                    TextBoxMachineNo.Clear();
-                    ComboBoxGroup.SelectedIndex = 0;
+                    
                 }
 
                 SendMqttMessageAdd(TextBoxIPAddress.Text.ToString());
                 SendMqttMessageStoreDetails();
                 SendMqttMessageDateTime();
+
+                TextBoxIPAddress.Clear();
+                TextBoxGameName.Clear();
+                TextBoxMachineNo.Clear();
+                ComboBoxGroup.SelectedIndex = 0;
             }
         }
 

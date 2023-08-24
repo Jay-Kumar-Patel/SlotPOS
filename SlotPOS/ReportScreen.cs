@@ -1259,6 +1259,31 @@ namespace SlotPOS
             DailyReport.ForeColor = System.Drawing.Color.Black;
             PanelPDF.Controls.Add(DailyReport);
 
+            DateTime tempTime = Convert.ToDateTime(Properties.Settings.Default.Counting);
+            DateTime currentTime = DateTime.Today;
+            String targetTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, tempTime.Hour, tempTime.Minute, tempTime.Second).ToString("dd-MM-yyyy h:mm:ss tt");
+
+            DateTime yesterdayTime = DateTime.Today.AddDays(-1);
+            String targetYesterdayTime = new DateTime(yesterdayTime.Year, yesterdayTime.Month, yesterdayTime.Day, tempTime.Hour, tempTime.Minute, tempTime.Second).ToString("dd-MM-yyyy h:mm:ss tt");
+
+            Label DateTo = new Label();
+            DateTo.Text = "To: " + DateTime.Today.DayOfWeek + " " + targetTime;
+            DateTo.Dock = DockStyle.Top;
+            DateTo.Font = new System.Drawing.Font("Bookman Old Style", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            DateTo.Padding = new Padding(30, 0, 0, 0);
+            DateTo.Height = 50;
+            DateTo.TextAlign = ContentAlignment.MiddleRight;
+            PanelPDF.Controls.Add(DateTo);
+
+            Label DateFrom = new Label();
+            DateFrom.Text = "From: " + DateTime.Today.DayOfWeek + " " + targetYesterdayTime;
+            DateFrom.Dock = DockStyle.Top;
+            DateFrom.Font = new System.Drawing.Font("Bookman Old Style", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            DateFrom.Padding = new Padding(30, 0, 0, 0);
+            DateFrom.Height = 50;
+            DateFrom.TextAlign = ContentAlignment.MiddleRight;
+            PanelPDF.Controls.Add(DateFrom);
+
             Label DateCreated = new Label();
             DateCreated.Text = "Created On: " + DateTime.Today.DayOfWeek + " " + DateTime.Now.ToString("dd-MM-yyyy h:mm:ss tt");
             DateCreated.Dock = DockStyle.Top;
@@ -1647,6 +1672,30 @@ namespace SlotPOS
             DailyReport.ForeColor = System.Drawing.Color.Black;
             PanelPDF.Controls.Add(DailyReport);
 
+            DateTime tempTime = Convert.ToDateTime(Properties.Settings.Default.Counting);
+            DateTime currentTime = DateTime.Today;
+            String targetTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, tempTime.Hour, tempTime.Minute, tempTime.Second).ToString("dd-MM-yyyy h:mm:ss tt");
+
+            DateTime yesterdayTime = DateTime.Today.AddDays(-1);
+            String targetYesterdayTime = new DateTime(yesterdayTime.Year, yesterdayTime.Month, yesterdayTime.Day, tempTime.Hour, tempTime.Minute, tempTime.Second).ToString("dd-MM-yyyy h:mm:ss tt");
+
+            Label DateTo = new Label();
+            DateTo.Text = "To: " + DateTime.Today.DayOfWeek + " " + targetTime;
+            DateTo.Dock = DockStyle.Top;
+            DateTo.Font = new System.Drawing.Font("Bookman Old Style", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            DateTo.Padding = new Padding(30, 0, 0, 0);
+            DateTo.Height = 50;
+            DateTo.TextAlign = ContentAlignment.MiddleRight;
+            PanelPDF.Controls.Add(DateTo);
+
+            Label DateFrom = new Label();
+            DateFrom.Text = "From: " + DateTime.Today.DayOfWeek + " " + targetYesterdayTime;
+            DateFrom.Dock = DockStyle.Top;
+            DateFrom.Font = new System.Drawing.Font("Bookman Old Style", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            DateFrom.Padding = new Padding(30, 0, 0, 0);
+            DateFrom.Height = 50;
+            DateFrom.TextAlign = ContentAlignment.MiddleRight;
+            PanelPDF.Controls.Add(DateFrom);
 
             Label DateCreated = new Label();
             DateCreated.Text = "Created On: " + DateTime.Today.DayOfWeek + " " + DateTime.Now.ToString("dd-MM-yyyy h:mm:ss tt");

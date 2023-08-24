@@ -15,6 +15,19 @@ namespace SlotPOS
         public SettingScreen()
         {
             InitializeComponent();
+            hideButtons();
+        }
+
+        private void hideButtons()
+        {
+            string userType = Properties.Settings.Default.UserType;
+            if (userType.Equals("Manager"))
+            {
+                ExposedButtonStoreInformation.Visible = false;
+                ExposedButtonUserManagement.Visible = false;
+                ExposedButtonReporting.Visible = false;
+                ExposedButtonTruncate.Visible = false;
+            }
         }
 
         private void ButtonStoreInfo_Click(object sender, EventArgs e)

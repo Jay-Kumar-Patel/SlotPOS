@@ -33,6 +33,7 @@ namespace SlotPOS
         public SplashScreen()
         {
             InitializeComponent();
+            FindCounting();
             DateTime tempTime = Convert.ToDateTime(Properties.Settings.Default.Counting);
             DateTime currentTime = DateTime.Now;
             DateTime targetTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, tempTime.Hour, tempTime.Minute, tempTime.Second);
@@ -60,6 +61,34 @@ namespace SlotPOS
             //Display LoginScreen.
             LoginScreen loginScreen = new();
             loginScreen.Show();
+        }
+
+        private void FindCounting()
+        {
+            Database database = new Database();
+            using (MySqlConnection connection = new MySqlConnection(database.connString))
+            {
+                connection.Open();
+
+                string query = "SELECT Counting FROM store_details";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string result = reader["Counting"].ToString();
+
+                            Properties.Settings.Default.Counting = Convert.ToDateTime(result);
+                        }
+                        else
+                        {
+                            Properties.Settings.Default.Counting = Convert.ToDateTime("8:00:00");
+                        }
+                    }
+                }
+            }
         }
 
         [AutomaticRetry(Attempts = 3)]
@@ -220,6 +249,23 @@ namespace SlotPOS
                 document.Add(paragraph3);
                 document.Add(paragraph4);
                 document.Add(paragraph5);
+
+                DateTime tempTime = Convert.ToDateTime(Properties.Settings.Default.Counting);
+                DateTime currentTime = DateTime.Today;
+                String targetTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, tempTime.Hour, tempTime.Minute, tempTime.Second).ToString("dd-MM-yyyy h:mm:ss tt");
+
+                DateTime yesterdayTime = DateTime.Today.AddDays(-1);
+                String targetYesterdayTime = new DateTime(yesterdayTime.Year, yesterdayTime.Month, yesterdayTime.Day, tempTime.Hour, tempTime.Minute, tempTime.Second).ToString("dd-MM-yyyy h:mm:ss tt");
+
+                Paragraph paragraph7 = new Paragraph("To: " + DateTime.Today.DayOfWeek + " " + targetTime);
+                paragraph7.SetFontSize(14f);
+                paragraph7.SetTextAlignment(TextAlignment.RIGHT);
+                document.Add(paragraph7);
+
+                Paragraph paragraph6 = new Paragraph("From: " + DateTime.Today.DayOfWeek + " " + targetYesterdayTime);
+                paragraph6.SetFontSize(14f);
+                paragraph6.SetTextAlignment(TextAlignment.RIGHT);
+                document.Add(paragraph6);
 
                 Paragraph paragraph2 = new Paragraph("Created On: " + DateTime.Today.DayOfWeek + " " + DateTime.Now.ToString("dd-MM-yyyy h:mm:ss tt"));
                 paragraph2.SetFontSize(14f);
@@ -1050,6 +1096,22 @@ namespace SlotPOS
             document.Add(paragraph4);
             document.Add(paragraph5);
 
+            DateTime tempTime = Convert.ToDateTime(Properties.Settings.Default.Counting);
+            DateTime currentTime = DateTime.Today;
+            String targetTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, tempTime.Hour, tempTime.Minute, tempTime.Second).ToString("dd-MM-yyyy h:mm:ss tt");
+
+            DateTime yesterdayTime = DateTime.Today.AddDays(-1);
+            String targetYesterdayTime = new DateTime(yesterdayTime.Year, yesterdayTime.Month, yesterdayTime.Day, tempTime.Hour, tempTime.Minute, tempTime.Second).ToString("dd-MM-yyyy h:mm:ss tt");
+
+            Paragraph paragraph7 = new Paragraph("To: " + DateTime.Today.DayOfWeek + " " + targetTime);
+            paragraph7.SetFontSize(14f);
+            paragraph7.SetTextAlignment(TextAlignment.RIGHT);
+            document.Add(paragraph7);
+
+            Paragraph paragraph6 = new Paragraph("From: " + DateTime.Today.DayOfWeek + " " + targetYesterdayTime);
+            paragraph6.SetFontSize(14f);
+            paragraph6.SetTextAlignment(TextAlignment.RIGHT);
+            document.Add(paragraph6);
 
             Paragraph paragraph2 = new Paragraph("Created On: " + DateTime.Today.DayOfWeek + " " + DateTime.Now.ToString("dd-MM-yyyy h:mm:ss tt"));
             paragraph2.SetFontSize(14f);

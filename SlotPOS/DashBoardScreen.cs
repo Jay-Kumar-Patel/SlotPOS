@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Guna.UI2.WinForms.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,6 +23,35 @@ namespace SlotPOS
             this.Padding = new Padding(borderSize);
             this.BackColor = Color.FromArgb(41, 39, 40);
             dashBoardScreen = this;
+            addDynamicButton();
+        }
+
+        private void addDynamicButton()
+        {
+            string userType = Properties.Settings.Default.UserType;
+            if (userType.Equals("Cashier"))
+            {
+                ExposedTableLayoutPanelMenu.ColumnCount = 2;
+                ExposedTableLayoutPanelMenu.Controls.Add(ExposedButtonHome, 0, 0);
+                ExposedTableLayoutPanelMenu.Controls.Add(ExposedButtonHistory, 1, 0);
+            }
+            else if (userType.Equals("Manager"))
+            {
+                ExposedTableLayoutPanelMenu.ColumnCount = 4;
+                ExposedTableLayoutPanelMenu.Controls.Add(ExposedButtonHome, 0, 0);
+                ExposedTableLayoutPanelMenu.Controls.Add(ExposedButtonHistory, 1, 0);
+                ExposedTableLayoutPanelMenu.Controls.Add(ExposedButtonReporting, 2, 0);
+                ExposedTableLayoutPanelMenu.Controls.Add(ExposedButtonSettings, 3, 0);
+            }
+            else
+            {
+                ExposedTableLayoutPanelMenu.ColumnCount = 5;
+                ExposedTableLayoutPanelMenu.Controls.Add(ExposedButtonHome, 0, 0);
+                ExposedTableLayoutPanelMenu.Controls.Add(ExposedButtonHistory, 1, 0);
+                ExposedTableLayoutPanelMenu.Controls.Add(ExposedButtonReporting, 2, 0);
+                ExposedTableLayoutPanelMenu.Controls.Add(ExposedButtonSlotSetup, 3, 0);
+                ExposedTableLayoutPanelMenu.Controls.Add(ExposedButtonSettings, 4, 0);
+            }
         }
 
         protected override CreateParams CreateParams

@@ -240,6 +240,10 @@ namespace SlotPOS
                                 string userName = dr.GetString("User_Name");
                                 Properties.Settings.Default.UserName = userName;
                                 Properties.Settings.Default.Save();
+
+                                string userType = dr.GetString("User_Type");
+                                Properties.Settings.Default.UserType = userType;
+                                Properties.Settings.Default.Save();
                             }
                             
                             dr.Close();

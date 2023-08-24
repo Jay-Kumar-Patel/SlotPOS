@@ -113,17 +113,17 @@
             // 
             // TableLayoutPanelMenu
             // 
-            TableLayoutPanelMenu.ColumnCount = 5;
+            //TableLayoutPanelMenu.ColumnCount = 5;
             TableLayoutPanelMenu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             TableLayoutPanelMenu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             TableLayoutPanelMenu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             TableLayoutPanelMenu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             TableLayoutPanelMenu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-            TableLayoutPanelMenu.Controls.Add(ButtonSettings, 4, 0);
-            TableLayoutPanelMenu.Controls.Add(ButtonUnknown, 3, 0);
-            TableLayoutPanelMenu.Controls.Add(ButtonReports, 2, 0);
-            TableLayoutPanelMenu.Controls.Add(ButtonHome, 0, 0);
-            TableLayoutPanelMenu.Controls.Add(ButtonHistory, 1, 0);
+            //TableLayoutPanelMenu.Controls.Add(ButtonSettings, 4, 0);
+            //TableLayoutPanelMenu.Controls.Add(ButtonUnknown, 3, 0);
+            //TableLayoutPanelMenu.Controls.Add(ButtonReports, 2, 0);
+            //TableLayoutPanelMenu.Controls.Add(ButtonHome, 0, 0);
+            //TableLayoutPanelMenu.Controls.Add(ButtonHistory, 1, 0);
             TableLayoutPanelMenu.Dock = DockStyle.Top;
             TableLayoutPanelMenu.Location = new Point(0, 60);
             TableLayoutPanelMenu.Name = "TableLayoutPanelMenu";
@@ -287,6 +287,36 @@
             PanelWelcome.ResumeLayout(false);
             TableLayoutPanelMenu.ResumeLayout(false);
             ResumeLayout(false);
+        }
+
+        protected TableLayoutPanel ExposedTableLayoutPanelMenu
+        {
+            get { return TableLayoutPanelMenu; }
+        }
+
+        protected Guna.UI2.WinForms.Guna2Button ExposedButtonHistory
+        {
+            get { return ButtonHistory; }
+        }
+
+        protected Guna.UI2.WinForms.Guna2Button ExposedButtonSettings
+        {
+            get { return ButtonSettings; }
+        }
+
+        protected Guna.UI2.WinForms.Guna2Button ExposedButtonHome
+        {
+            get { return ButtonHome; }
+        }
+
+        protected Guna.UI2.WinForms.Guna2Button ExposedButtonSlotSetup
+        {
+            get { return ButtonUnknown; }
+        }
+
+        protected Guna.UI2.WinForms.Guna2Button ExposedButtonReporting
+        {
+            get { return ButtonReports; }
         }
 
         #endregion

@@ -44,11 +44,11 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34F));
-            tableLayoutPanel1.Controls.Add(ButtonStoreInfo, 1, 1);
-            tableLayoutPanel1.Controls.Add(ButtonUserManagement, 1, 2);
-            tableLayoutPanel1.Controls.Add(ButtonReporting, 1, 3);
-            tableLayoutPanel1.Controls.Add(ButtonPromoSetup, 1, 4);
-            tableLayoutPanel1.Controls.Add(ButtonShiftManagement, 1, 5);
+            tableLayoutPanel1.Controls.Add(ButtonStoreInfo, 1, 3);
+            tableLayoutPanel1.Controls.Add(ButtonUserManagement, 1, 4);
+            tableLayoutPanel1.Controls.Add(ButtonReporting, 1, 5);
+            tableLayoutPanel1.Controls.Add(ButtonPromoSetup, 1, 1);
+            tableLayoutPanel1.Controls.Add(ButtonShiftManagement, 1, 2);
             tableLayoutPanel1.Controls.Add(ButtonTruncate, 1, 6);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
@@ -170,6 +170,25 @@
             Text = "SettingScreen";
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
+        }
+
+        protected Button ExposedButtonStoreInformation
+        {
+            get { return ButtonStoreInfo; }
+        }
+
+        protected Button ExposedButtonUserManagement
+        {
+            get { return ButtonUserManagement; }
+        }
+        protected Button ExposedButtonReporting
+        {
+            get { return ButtonReporting; }
+        }
+
+        protected Button ExposedButtonTruncate
+        {
+            get { return ButtonTruncate; }
         }
 
         #endregion
