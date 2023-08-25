@@ -28,6 +28,14 @@ namespace SlotPOS
                 ExposedButtonReporting.Visible = false;
                 ExposedButtonTruncate.Visible = false;
             }
+            else if (userType.Equals("Admin"))
+            {
+                ExposedButtonTruncate.Visible = false;
+            }
+            else
+            {
+                //All Buttons are visible
+            }
         }
 
         private void ButtonStoreInfo_Click(object sender, EventArgs e)

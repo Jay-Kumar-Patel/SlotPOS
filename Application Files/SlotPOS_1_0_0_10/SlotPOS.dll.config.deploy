@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <configSections>
+        <sectionGroup name="userSettings" type="System.Configuration.UserSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" >
+            <section name="SlotPOS.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+        </sectionGroup>
+    </configSections>
+    <userSettings>
+        <SlotPOS.Properties.Settings>
+            <setting name="UserID" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="UserName" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="ShiftID" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="NewUser" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="Balance" serializeAs="String">
+                <value>0.00</value>
+            </setting>
+            <setting name="Counting" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="UserType" serializeAs="String">
+                <value />
+            </setting>
+        </SlotPOS.Properties.Settings>
+    </userSettings>
+</configuration>

@@ -445,8 +445,7 @@ namespace SlotPOS
 
                 if (result == DialogResult.Yes)
                 {
-                    SendMqttMessageDeleteSecondMessage(DataGridViewMachines.Rows[e.RowIndex].Cells["Static_IP"].Value.ToString());
-                    DeleteMachine(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString());
+                    DeleteMachine(DataGridViewMachines.Rows[e.RowIndex].Cells["Machine_No"].Value.ToString(), DataGridViewMachines.Rows[e.RowIndex].Cells["Static_IP"].Value.ToString());
                 }
             }
         }
@@ -506,7 +505,7 @@ namespace SlotPOS
             }
         }
 
-        private void DeleteMachine(string machineNo)
+        private void DeleteMachine(string machineNo, String ipAddress)
         {
             Database database = new Database();
             using (MySqlConnection connection = new MySqlConnection(database.connString))
@@ -534,6 +533,7 @@ namespace SlotPOS
                         {
                             selectCommand.Parameters.AddWithValue("@machineNo", machineNo + "_" + currentTimestamp);
                             SendMqttMessageDeleteFirstMessage(machineNo + "_" + currentTimestamp);
+                            SendMqttMessageDeleteSecondMessage(ipAddress);
                             using (MySqlDataReader reader = selectCommand.ExecuteReader())
                             {
                                 if (reader.Read())
