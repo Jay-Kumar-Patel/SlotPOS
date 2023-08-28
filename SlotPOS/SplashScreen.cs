@@ -1172,12 +1172,12 @@ namespace SlotPOS
                 Cell cell31 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.starting_drawer)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
                 Cell cell32 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.totalIn)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
                 Cell cell33 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.totalOut)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
-                Cell cell34 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.totalIn)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
-                Cell cell35 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.promo)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
-                Cell cell36 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.match_play)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
-                Cell cell37 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.fill)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
-                Cell cell38 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.drop)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
-                Cell cell39 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.expense)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+                Cell cell34 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.promo)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+                Cell cell35 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.match_play)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+                Cell cell36 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.fill)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+                Cell cell37 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.drop)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+                Cell cell38 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.expense)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+                Cell cell39 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.total_tickets_out)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
                 Cell cell310 = new Cell(1, 1).Add(new Paragraph(Convert.ToString(temp.net)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
 
 

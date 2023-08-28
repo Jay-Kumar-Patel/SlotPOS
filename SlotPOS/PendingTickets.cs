@@ -154,6 +154,7 @@ namespace SlotPOS
                     command.ExecuteNonQuery();
                     connection.Close();
 
+                    AddShiftValue(long.Parse(row[1].ToString()));
                     String queryUpdate = "UPDATE ticket_details SET Ticket_Status = 1 Where Ticket_No = " + decimal.Parse(currentButton.Name);
                     MySqlCommand commandUpdate = new MySqlCommand(queryUpdate, connection);
 
@@ -175,9 +176,39 @@ namespace SlotPOS
             {
                 MessageBox.Show("Transaction Insertion Failed" + ex);
             }
+        }
+
+        private void AddShiftValue(long amountM)
+        {
+            Database dataBase = new Database();
+            using (MySqlConnection connection = new MySqlConnection(dataBase.connString))
+            {
+                connection.Open();
+
+                string query = $"SELECT Slot_Cash_Out_Tickets FROM shift_table WHERE Login_ID = {Properties.Settings.Default.UserID} and Status=1;";
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                MySqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    ulong existingMatchplay = reader.GetUInt64("Slot_Cash_Out_Tickets");
 
 
+                    // Calculate the updated values
+                    decimal updatedMatchplay = existingMatchplay + (ulong)amountM;
 
+                    // Update the match_play and total_in columns in the database.
+                    connection.Close();
+                    string updateQuery = "UPDATE shift_table SET Slot_Cash_Out_Tickets = @updatedFill WHERE Login_ID = @userId AND Status = 1";
+                    MySqlCommand updateCommand = new MySqlCommand(updateQuery, connection);
+                    updateCommand.Parameters.AddWithValue("@updatedFill", updatedMatchplay);
+                    updateCommand.Parameters.AddWithValue("@userId", Properties.Settings.Default.UserID);
+                    connection.Open();
+                    updateCommand.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
         }
 
         Label addLabel(String text)
