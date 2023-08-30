@@ -185,7 +185,7 @@ namespace SlotPOS
             {
                 connection.Open();
 
-                string query = $"SELECT Slot_Cash_Out_Tickets FROM shift_table WHERE Login_ID = {Properties.Settings.Default.UserID} and Status=1;";
+                string query = $"SELECT Slot_Cash_Out_Tickets, Total_Out FROM shift_table WHERE Login_ID = {Properties.Settings.Default.UserID} and Status=1;";
                 MySqlCommand command = new MySqlCommand(query, connection);
 
                 MySqlDataReader reader = command.ExecuteReader();
@@ -193,16 +193,19 @@ namespace SlotPOS
                 if (reader.Read())
                 {
                     ulong existingMatchplay = reader.GetUInt64("Slot_Cash_Out_Tickets");
+                    ulong totalOut = reader.GetUInt64("Total_Out");
 
 
                     // Calculate the updated values
                     decimal updatedMatchplay = existingMatchplay + (ulong)amountM;
+                    decimal updatedTotalOut = totalOut + (ulong)amountM;
 
                     // Update the match_play and total_in columns in the database.
                     connection.Close();
-                    string updateQuery = "UPDATE shift_table SET Slot_Cash_Out_Tickets = @updatedFill WHERE Login_ID = @userId AND Status = 1";
+                    string updateQuery = "UPDATE shift_table SET Slot_Cash_Out_Tickets = @updatedFill, Total_Out = @updatedTotalOut WHERE Login_ID = @userId AND Status = 1";
                     MySqlCommand updateCommand = new MySqlCommand(updateQuery, connection);
                     updateCommand.Parameters.AddWithValue("@updatedFill", updatedMatchplay);
+                    updateCommand.Parameters.AddWithValue("@updatedTotalOut", updatedTotalOut);
                     updateCommand.Parameters.AddWithValue("@userId", Properties.Settings.Default.UserID);
                     connection.Open();
                     updateCommand.ExecuteNonQuery();
