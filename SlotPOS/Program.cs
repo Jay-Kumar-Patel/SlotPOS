@@ -35,7 +35,7 @@ namespace SlotPOS
             GlobalConfiguration.Configuration
                 .UseStorage(
                 new MySqlStorage(
-                "server=127.0.0.1;port=3306;username = slotposuser;password = Slot@POSUSA;database = hangfireslots;Allow User Variables=True",
+                "server=192.168.1.254;port=3306;username = slotposuser;password = Slot@POSUSA;database = hangfireslots;Allow User Variables=True",
                 new MySqlStorageOptions
                 {
                     TablesPrefix = "Hangfire"
