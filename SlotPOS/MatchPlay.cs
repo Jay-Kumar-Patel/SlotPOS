@@ -2,6 +2,7 @@
 using SlotPOS.Utils;
 using System.Data;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace SlotPOS
 {
@@ -11,13 +12,56 @@ namespace SlotPOS
         public MatchPlay()
         {
             InitializeComponent();
-            TextBoxMachine.AutoSize = false;
-            TextBoxAmount.AutoSize = false;
+            //TextBoxMachine.AutoSize = false;
+            //TextBoxAmount.AutoSize = false;
         }
 
         private void ButtonConfirm_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(TextBoxMachine.Text))
+
+            //Location Fetch
+            //Ticket Amount String create 20 dollar
+            //Call Printer Class
+            //Return value parse in ulong
+
+            Database database = new Database();
+            MySqlConnection connection = new MySqlConnection(database.connString);
+
+            connection.Open();
+
+            String query = "select * from store_details";
+            MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+            DataSet data = new DataSet();
+            adapter.Fill(data);
+
+            String storeName = null;
+            foreach (DataRow row in data.Tables[0].Rows)
+            {
+                storeName = row[0].ToString();
+            }
+            connection.Close();
+
+            String ticketnumber = Printer.Receipt("40.00", storeName);
+
+            ulong result;
+
+            if (ulong.TryParse(ticketnumber, out result))
+            {
+                EnterMatchPlayTransaction();
+                EnterCashInTransaction();
+                Properties.Settings.Default.Balance = Properties.Settings.Default.Balance + decimal.Parse(result.ToString().Trim());
+
+                AddShiftValue();
+            }
+            else
+            {
+                MessageBox.Show("Please try again later!");
+            }
+
+            this.Close();
+
+
+            /*if (!string.IsNullOrEmpty(TextBoxMachine.Text))
             {
                 Database dataBase = new Database();
                 MySqlConnection connection = new MySqlConnection(dataBase.connString);
@@ -65,7 +109,7 @@ namespace SlotPOS
             else
             {
                 MessageBox.Show("Please enter Machine Number.");
-            }
+            }*/
         }
 
         private void EnterMatchPlayTransaction()
@@ -74,8 +118,8 @@ namespace SlotPOS
             MySqlConnection connection = new MySqlConnection(dataBase.connString);
             connection.Open();
 
-            String queryInsert = "INSERT INTO transactions (User_ID, Transaction_Type, Machine_No, Amount, DateAndTime)" +
-                        " VALUES (@UserId, @Transaction_Type, @Machine_No, @Amount, @DateAndTime)";
+            String queryInsert = "INSERT INTO transactions (User_ID, Transaction_Type, Amount, DateAndTime)" +
+                        " VALUES (@UserId, @Transaction_Type, @Amount, @DateAndTime)";
             MySqlCommand command = new MySqlCommand(queryInsert, connection);
 
             string userId = Properties.Settings.Default.UserID;
@@ -83,8 +127,8 @@ namespace SlotPOS
 
             command.Parameters.AddWithValue("@UserId", ulong.Parse(userId));
             command.Parameters.AddWithValue("@Transaction_Type", "Match_Play");
-            command.Parameters.AddWithValue("@Machine_No", ulong.Parse(TextBoxMachine.Text));
-            command.Parameters.AddWithValue("@Amount", (ulong)(decimal.Parse(TextBoxAmount.Text) * 100));
+            //command.Parameters.AddWithValue("@Machine_No", "");
+            command.Parameters.AddWithValue("@Amount", (ulong)(20 * 100));
             command.Parameters.AddWithValue("@DateAndTime", now);
 
             command.ExecuteNonQuery();
@@ -97,8 +141,8 @@ namespace SlotPOS
             MySqlConnection connection = new MySqlConnection(dataBase.connString);
             connection.Open();
 
-            String queryInsert = "INSERT INTO transactions (User_ID, Transaction_Type, Machine_No, Amount, DateAndTime)" +
-                        " VALUES (@UserId, @Transaction_Type, @Machine_No, @Amount, @DateAndTime)";
+            String queryInsert = "INSERT INTO transactions (User_ID, Transaction_Type, Amount, DateAndTime)" +
+                        " VALUES (@UserId, @Transaction_Type, @Amount, @DateAndTime)";
             MySqlCommand command = new MySqlCommand(queryInsert, connection);
 
             string userId = Properties.Settings.Default.UserID;
@@ -106,8 +150,8 @@ namespace SlotPOS
 
             command.Parameters.AddWithValue("@UserId", ulong.Parse(userId));
             command.Parameters.AddWithValue("@Transaction_Type", "Cash_In");
-            command.Parameters.AddWithValue("@Machine_No", ulong.Parse(TextBoxMachine.Text));
-            command.Parameters.AddWithValue("@Amount", (ulong)(decimal.Parse(TextBoxAmount.Text) * 100));
+            //command.Parameters.AddWithValue("@Machine_No", "");
+            command.Parameters.AddWithValue("@Amount", (20 * 100));
             command.Parameters.AddWithValue("@DateAndTime", now);
 
             command.ExecuteNonQuery();
@@ -131,7 +175,7 @@ namespace SlotPOS
                     ulong existingMatchplay = reader.GetUInt64("Match_Play");
                     ulong existingTotalIn = reader.GetUInt64("Total_In");
 
-                    decimal amount = Convert.ToDecimal(TextBoxAmount.Text) * 100;
+                    decimal amount = Convert.ToDecimal(20 * 100);
 
                     // Calculate the updated values
                     decimal updatedMatchplay = existingMatchplay + (ulong)amount;
