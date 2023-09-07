@@ -47,6 +47,7 @@ namespace SlotPOS
 
             if (ulong.TryParse(ticketnumber, out result))
             {
+                EnterTicketDetails(result);
                 EnterMatchPlayTransaction();
                 EnterCashInTransaction();
                 Properties.Settings.Default.Balance = Properties.Settings.Default.Balance + decimal.Parse(result.ToString().Trim());
@@ -110,6 +111,29 @@ namespace SlotPOS
             {
                 MessageBox.Show("Please enter Machine Number.");
             }*/
+        }
+
+        private void EnterTicketDetails(ulong ticketNumber)
+        {
+            Database dataBase = new Database();
+            MySqlConnection connection = new MySqlConnection(dataBase.connString);
+            connection.Open();
+
+            String queryInsert = "INSERT INTO ticket_details (Ticket_No, Ticket_Amount, Date_Time, Ticket_Status, isPromoTicket)" +
+                        " VALUES (@TicketNo, @TicketAmount, @DateTime, @TicketStatus, @isPromo)";
+            MySqlCommand command = new MySqlCommand(queryInsert, connection);
+
+            string userId = Properties.Settings.Default.UserID;
+            DateTime now = DateTime.Now;
+
+            command.Parameters.AddWithValue("@TicketNo", ticketNumber.ToString().Trim());
+            command.Parameters.AddWithValue("@TicketAmount", 4000);
+            command.Parameters.AddWithValue("@DateTime", DateTime.Now);
+            command.Parameters.AddWithValue("@TicketStatus", 0);
+            command.Parameters.AddWithValue("@isPromo", 1);
+
+            command.ExecuteNonQuery();
+            connection.Close();
         }
 
         private void EnterMatchPlayTransaction()
