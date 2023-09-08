@@ -50,7 +50,7 @@ namespace SlotPOS
                 EnterTicketDetails(result);
                 EnterMatchPlayTransaction();
                 EnterCashInTransaction();
-                Properties.Settings.Default.Balance = Properties.Settings.Default.Balance + decimal.Parse(result.ToString().Trim());
+                Properties.Settings.Default.Balance = Properties.Settings.Default.Balance + decimal.Parse("20.0");
 
                 AddShiftValue();
             }
